@@ -3,6 +3,7 @@ Model definitions for the FastLP OCR.
 """
 
 from typing import Literal
+import kimm
 
 from keras.activations import softmax
 from keras.layers import (
@@ -12,16 +13,12 @@ from keras.layers import (
     Dropout,
     GlobalAveragePooling2D,
     Input,
-    Rescaling,
     Reshape,
     Softmax,
 )
 from keras.models import Model
 
 from fast_plate_ocr.train.model.layer_blocks import (
-    block_average_conv_down,
-    block_bn,
-    block_max_conv_down,
     block_no_activation,
 )
 
@@ -35,33 +32,17 @@ def cnn_ocr_model(
     activation: str = "relu",
     pool_layer: Literal["avg", "max"] = "max",
 ) -> Model:
-    """
-    OCR model implemented with just CNN layers (v2).
-    """
-    input_tensor = Input((h, w, 1))
-    x = Rescaling(1.0 / 255)(input_tensor)
-    # Pooling-Conv layer
-    if pool_layer == "avg":
-        block_pool_conv = block_average_conv_down
-    elif pool_layer == "max":
-        block_pool_conv = block_max_conv_down
-    # Backbone
-    x = block_pool_conv(x, n_c=32, padding="same", activation=activation)
-    x, _ = block_bn(x, k=3, n_c=64, s=1, padding="same", activation=activation)
-    x, _ = block_bn(x, k=1, n_c=64, s=1, padding="same", activation=activation)
-    x = block_pool_conv(x, n_c=64, padding="same", activation=activation)
-    x, _ = block_bn(x, k=3, n_c=128, s=1, padding="same", activation=activation)
-    x, _ = block_bn(x, k=1, n_c=128, s=1, padding="same", activation=activation)
-    x = block_pool_conv(x, n_c=128, padding="same", activation=activation)
-    x, _ = block_bn(x, k=3, n_c=128, s=1, padding="same", activation=activation)
-    x, _ = block_bn(x, k=1, n_c=256, s=1, padding="same", activation=activation)
-    x = block_pool_conv(x, n_c=256, padding="same", activation=activation)
-    x, _ = block_bn(x, k=1, n_c=512, s=1, padding="same", activation=activation)
-    x, _ = block_bn(x, k=1, n_c=1024, s=1, padding="same", activation=activation)
+    input_tensor = Input((h, w, 1))  # Define the input tensor
+    backbone = kimm.models.MobileViTV2W050(
+        input_tensor=input_tensor,
+        include_top=False,
+        weights=None,
+    )
+    backbone_output = backbone.output
     x = (
-        head(x, max_plate_slots, vocabulary_size)
+        head(backbone_output, max_plate_slots, vocabulary_size)
         if dense
-        else head_no_fc(x, max_plate_slots, vocabulary_size)
+        else head_no_fc(backbone_output, max_plate_slots, vocabulary_size)
     )
     return Model(inputs=input_tensor, outputs=x)
 

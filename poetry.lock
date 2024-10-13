@@ -4,7 +4,7 @@
 name = "absl-py"
 version = "2.1.0"
 description = "Abseil Python Common Libraries, see https://github.com/abseil/abseil-py."
-optional = true
+optional = false
 python-versions = ">=3.7"
 files = [
     {file = "absl-py-2.1.0.tar.gz", hash = "sha256:7820790efbb316739cde8b4e19357243fc3608a152024288513dd968d7d959ff"},
@@ -598,7 +598,7 @@ protobuf = ["grpcio-tools (>=1.62.1)"]
 name = "h5py"
 version = "3.11.0"
 description = "Read and write HDF5 files from Python"
-optional = true
+optional = false
 python-versions = ">=3.8"
 files = [
     {file = "h5py-3.11.0-cp310-cp310-macosx_10_9_x86_64.whl", hash = "sha256:1625fd24ad6cfc9c1ccd44a66dac2396e7ee74940776792772819fc69f3a3731"},
@@ -775,7 +775,7 @@ files = [
 name = "keras"
 version = "3.2.1"
 description = "Multi-backend Keras."
-optional = true
+optional = false
 python-versions = ">=3.9"
 files = [
     {file = "keras-3.2.1-py3-none-any.whl", hash = "sha256:0be1e89b041e697be562d8422ecb958ee5481acfc089913200926c561d258a03"},
@@ -790,6 +790,24 @@ namex = "*"
 numpy = "*"
 optree = "*"
 rich = "*"
+
+[[package]]
+name = "kimm"
+version = "0.2.2"
+description = "A Keras model zoo with pretrained weights."
+optional = false
+python-versions = ">=3.9"
+files = [
+    {file = "kimm-0.2.2-py3-none-any.whl", hash = "sha256:a3ca135c5ef9d7d721ee5303303ca4f0edaa5f1401aa624edfb509b5187d501d"},
+    {file = "kimm-0.2.2.tar.gz", hash = "sha256:c61cf3d2a85985f7a1d3345ffc13f2aea40812d74144e41616883aefe693a94f"},
+]
+
+[package.dependencies]
+keras = "*"
+
+[package.extras]
+examples = ["matplotlib", "opencv-python"]
+tests = ["black", "coverage", "isort", "namex", "onnx", "onnxoptimizer", "onnxsim", "pre-commit", "pytest", "pytest-cov", "ruff", "tf2onnx"]
 
 [[package]]
 name = "kiwisolver"
@@ -1287,7 +1305,7 @@ mkdocstrings = ">=0.24.2"
 name = "ml-dtypes"
 version = "0.3.2"
 description = ""
-optional = true
+optional = false
 python-versions = ">=3.9"
 files = [
     {file = "ml_dtypes-0.3.2-cp310-cp310-macosx_10_9_universal2.whl", hash = "sha256:7afde548890a92b41c0fed3a6c525f1200a5727205f73dc21181a2726571bb53"},
@@ -1398,7 +1416,7 @@ files = [
 name = "namex"
 version = "0.0.7"
 description = "A simple utility to separate the implementation of your Python package and its public API surface."
-optional = true
+optional = false
 python-versions = "*"
 files = [
     {file = "namex-0.0.7-py3-none-any.whl", hash = "sha256:8a4f062945f405d77cb66b907f16aa2fd83681945e998be840eb6c4154d40108"},
@@ -1824,7 +1842,7 @@ tests = ["pytest", "pytest-cov", "pytest-pep8"]
 name = "optree"
 version = "0.11.0"
 description = "Optimized PyTree Utilities."
-optional = true
+optional = false
 python-versions = ">=3.7"
 files = [
     {file = "optree-0.11.0-cp310-cp310-macosx_10_9_universal2.whl", hash = "sha256:fa9ed745d4cbac5e15df70339b30867ba033542b87f7b734f4cacae5ec73ba00"},
@@ -3354,4 +3372,4 @@ train = ["albumentations", "click", "keras", "matplotlib", "onnxsim", "pandas", 
 [metadata]
 lock-version = "2.0"
 python-versions = "^3.10"
-content-hash = "2979d4cc9987eb6cd095927b25fb374d84899be105c462b1c798e88c6ba17538"
+content-hash = "0ea6aee4d78fa5504e775c9dc56494a428ab65aab2f8908e501c58f1ec1fee1f"

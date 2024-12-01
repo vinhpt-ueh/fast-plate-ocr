@@ -24,6 +24,7 @@ from fast_plate_ocr.train.model.layer_blocks import (
     block_max_conv_down,
     block_no_activation,
 )
+from fast_plate_ocr.train.model.stn import SpatialTransformer, create_localization_net
 
 
 def cnn_ocr_model(
@@ -34,13 +35,17 @@ def cnn_ocr_model(
     dense: bool = True,
     activation: str = "relu",
     pool_layer: Literal["avg", "max"] = "max",
+    use_stn: bool = False,  # New flag to toggle STN
 ) -> Model:
     """
-    OCR model implemented with just CNN layers (v2).
+    OCR model implemented with just CNN layers (v2), optionally includes STN.
     """
     input_tensor = Input((h, w, 1))
     x = Rescaling(1.0 / 255)(input_tensor)
-    # Pooling-Conv layer
+    if use_stn:
+        localization_net = create_localization_net((h, w, 1))
+        stn = SpatialTransformer(localization_net)(x)
+        x = stn
     if pool_layer == "avg":
         block_pool_conv = block_average_conv_down
     elif pool_layer == "max":

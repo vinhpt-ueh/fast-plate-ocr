@@ -37,6 +37,12 @@ from fast_plate_ocr.train.model.models import cnn_ocr_model
     help="Whether to use Fully Connected layers in model head or not.",
 )
 @click.option(
+    "--use-stn/--no-stn",
+    default=False,
+    show_default=True,
+    help="Whether to use the Spatial Transformer Network (STN) in the model.",
+)
+@click.option(
     "--config-file",
     required=True,
     type=click.Path(exists=True, file_okay=True, path_type=pathlib.Path),
@@ -145,6 +151,7 @@ from fast_plate_ocr.train.model.models import cnn_ocr_model
 @print_params(table_title="CLI Training Parameters", c1_title="Parameter", c2_title="Details")
 def train(
     dense: bool,
+    use_stn: bool,
     config_file: pathlib.Path,
     annotations: pathlib.Path,
     val_annotations: pathlib.Path,
@@ -199,6 +206,7 @@ def train(
         vocabulary_size=config.vocabulary_size,
         activation=activation,
         pool_layer=pool_layer,
+        use_stn=use_stn,
     )
     model.compile(
         loss=cce_loss(vocabulary_size=config.vocabulary_size),

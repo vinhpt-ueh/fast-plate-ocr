@@ -130,23 +130,15 @@ from fast_plate_ocr.train.model.models import cnn_ocr_model
     help="Reduce the learning rate by this factor when 'val_plate_acc' doesn't improve.",
 )
 @click.option(
-    "--activation",
-    default="relu",
-    show_default=True,
-    type=str,
-    help="Activation function to use.",
-)
-@click.option(
-    "--pool-layer",
-    default="max",
-    show_default=True,
-    type=click.Choice(["max", "avg"]),
-    help="Choose the pooling layer to use.",
-)
-@click.option(
     "--weights-path",
     type=click.Path(exists=True, file_okay=True, path_type=pathlib.Path),
     help="Path to the pretrained model weights file.",
+)
+@click.option(
+    "--use-stn/--no-use-stn",
+    default=False,
+    show_default=True,
+    help="Whether to use the Spatial Transformer Network (STN) or not.",
 )
 @print_params(table_title="CLI Training Parameters", c1_title="Parameter", c2_title="Details")
 def train(
@@ -165,8 +157,8 @@ def train(
     early_stopping_patience: int,
     reduce_lr_patience: int,
     reduce_lr_factor: float,
-    activation: str,
-    pool_layer: Literal["max", "avg"],
+    weights_path: pathlib.Path | None,
+    use_stn: bool,
 ) -> None:
     """
     Train the License Plate OCR model.
@@ -203,12 +195,11 @@ def train(
         dense=dense,
         max_plate_slots=config.max_plate_slots,
         vocabulary_size=config.vocabulary_size,
-        activation=activation,
-        pool_layer=pool_layer,
+        use_stn=use_stn,
     )
 
     if weights_path:
-        model.load_weights(weights_path)
+        model.load_weights(weights_path, skip_mismatch=True)
 
     model.compile(
         loss=cce_loss(vocabulary_size=config.vocabulary_size),

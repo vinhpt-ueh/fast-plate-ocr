@@ -2,9 +2,8 @@
 Model definitions for the FastLP OCR.
 """
 
-from typing import Literal
 import kimm
-
+import kimm.models
 from keras.activations import softmax
 from keras.layers import (
     Activation,
@@ -21,6 +20,7 @@ from keras.models import Model
 from fast_plate_ocr.train.model.layer_blocks import (
     block_no_activation,
 )
+from fast_plate_ocr.train.model.stn import SpatialTransformer, create_localization_net
 
 
 def cnn_ocr_model(
@@ -29,22 +29,33 @@ def cnn_ocr_model(
     max_plate_slots: int,
     vocabulary_size: int,
     dense: bool = True,
-    activation: str = "relu",
-    pool_layer: Literal["avg", "max"] = "max",
+    use_stn: bool = False,
 ) -> Model:
-    input_tensor = Input((h, w, 1))  # Define the input tensor
-    backbone = kimm.models.MobileViTV2W050(
-        input_tensor=input_tensor,
-        include_top=False,
-        weights=None,
-    )
-    backbone_output = backbone.output
+    input_tensor = Input((h, w, 1))
+    if use_stn:
+        localization_net = create_localization_net((h, w, 1))
+        stn_layer = SpatialTransformer(localization_net=localization_net, output_size=(h, w))
+        backbone_input = stn_layer(input_tensor)
+        backbone_base = kimm.models.MobileViTV2W050(
+            include_top=False,
+            weights=None,
+            input_shape=[h, w, 1],
+        )
+        backbone_output = backbone_base(backbone_input)
+    else:
+        backbone = kimm.models.MobileViTV2W050(
+            input_tensor=input_tensor,
+            include_top=False,
+            weights=None,
+        )
+        backbone_output = backbone.output
     x = (
         head(backbone_output, max_plate_slots, vocabulary_size)
         if dense
         else head_no_fc(backbone_output, max_plate_slots, vocabulary_size)
     )
-    return Model(inputs=input_tensor, outputs=x)
+    model = Model(inputs=input_tensor, outputs=x)
+    return model
 
 
 def head(x, max_plate_slots: int, vocabulary_size: int):

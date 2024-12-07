@@ -5,7 +5,6 @@ Script for training the License Plate OCR models.
 import pathlib
 import shutil
 from datetime import datetime
-from typing import Literal
 
 import albumentations as A
 import click

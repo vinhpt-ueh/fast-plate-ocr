@@ -160,3 +160,5 @@ cudnn64_7.dll
 
 # Train folder
 train_val_set/
+dataset
+test_tracks

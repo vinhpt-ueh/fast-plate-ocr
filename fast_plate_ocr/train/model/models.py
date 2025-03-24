@@ -49,7 +49,6 @@ def cnn_ocr_model(
             input_tensor=input_tensor,
             include_top=False,
             weights=None,
-            training=False
         )
         backbone.trainable = False
 

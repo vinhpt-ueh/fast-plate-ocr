@@ -79,3 +79,23 @@ def cce_loss(vocabulary_size: int, label_smoothing: float = 0.2):
         )
 
     return cce
+
+# Custom loss
+def ccfc_loss(vocabulary_size: int, label_smoothing: float = 0.2):
+    """
+    Categorical categorical_focal_crossentropy loss.
+    """
+
+    def cce(y_true, y_pred):
+        """
+        Computes the categorical cross-entropy loss.
+        """
+        y_true = ops.reshape(y_true, newshape=(-1, vocabulary_size))
+        y_pred = ops.reshape(y_pred, newshape=(-1, vocabulary_size))
+        return ops.mean(
+            losses.categorical_focal_crossentropy(
+                y_true, y_pred, from_logits=False, label_smoothing=label_smoothing
+            )
+        )
+
+    return ccfc_loss

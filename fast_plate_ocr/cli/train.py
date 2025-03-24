@@ -22,6 +22,7 @@ from fast_plate_ocr.train.model.custom import (
     cce_loss,
     plate_acc_metric,
     top_3_k_metric,
+    ccfc_loss
 )
 from fast_plate_ocr.train.model.models import cnn_ocr_model
 
@@ -209,7 +210,7 @@ def train(
         model.load_weights(weights_path, skip_mismatch=True)
 
     model.compile(
-        loss=cce_loss(vocabulary_size=config.vocabulary_size, label_smoothing=label_smoothing),
+        loss=ccfc_loss(vocabulary_size=config.vocabulary_size, label_smoothing=label_smoothing),
         optimizer=Adam(lr),
         metrics=[
             cat_acc_metric(

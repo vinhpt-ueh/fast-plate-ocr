@@ -16,6 +16,7 @@ from fast_plate_ocr.train.model.custom import (
     cce_loss,
     plate_acc_metric,
     top_3_k_metric,
+    ccfc_loss,
 )
 
 
@@ -64,6 +65,7 @@ def load_keras_model(
         "cat_acc": cat_acc_metric(max_plate_slots=max_plate_slots, vocabulary_size=vocab_size),
         "plate_acc": plate_acc_metric(max_plate_slots=max_plate_slots, vocabulary_size=vocab_size),
         "top_3_k": top_3_k_metric(vocabulary_size=vocab_size),
+        "ccfc": ccfc_loss(vocabulary_size=vocab_size),
     }
     model = keras.models.load_model(model_path, custom_objects=custom_objects)
     return model

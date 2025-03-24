@@ -86,7 +86,7 @@ def ccfc_loss(vocabulary_size: int, label_smoothing: float = 0.2):
     Categorical categorical_focal_crossentropy loss.
     """
 
-    def cce(y_true, y_pred):
+    def ccfc(y_true, y_pred):
         """
         Computes the categorical cross-entropy loss.
         """
@@ -98,4 +98,4 @@ def ccfc_loss(vocabulary_size: int, label_smoothing: float = 0.2):
             )
         )
 
-    return ccfc_loss
+    return ccfc

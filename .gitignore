@@ -163,3 +163,4 @@ train_val_set/
 dataset
 old_models
 test_tracks
+synthetic_images

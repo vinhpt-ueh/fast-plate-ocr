@@ -33,6 +33,7 @@ def cnn_ocr_model(
 ) -> Model:
     input_tensor = Input((h, w, 1))
     if use_stn:
+        print('use_stn')
         localization_net = create_localization_net((h, w, 1))
         stn_layer = SpatialTransformer(localization_net=localization_net, output_size=(h, w))
         backbone_input = stn_layer(input_tensor)
@@ -43,12 +44,17 @@ def cnn_ocr_model(
         )
         backbone_output = backbone_base(backbone_input)
     else:
+        print('not use_stn')
         backbone = kimm.models.MobileViTV2W050(
             input_tensor=input_tensor,
             include_top=False,
             weights=None,
+            training=False
         )
+        backbone.trainable = False
+
         backbone_output = backbone.output
+
     x = (
         head(backbone_output, max_plate_slots, vocabulary_size)
         if dense
@@ -64,6 +70,7 @@ def head(x, max_plate_slots: int, vocabulary_size: int):
     """
     x = GlobalAveragePooling2D()(x)
     # dropout for more robust learning
+    x = Dense(256, activation='relu')(x)
     x = Dropout(0.5)(x)
     dense_outputs = [
         Activation(softmax)(Dense(units=vocabulary_size)(x)) for _ in range(max_plate_slots)

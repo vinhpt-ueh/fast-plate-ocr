@@ -50,8 +50,6 @@ def cnn_ocr_model(
             include_top=False,
             weights=None,
         )
-        backbone.trainable = False
-
         backbone_output = backbone.output
 
     x = (

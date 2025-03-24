@@ -210,7 +210,7 @@ def train(
         model.load_weights(weights_path, skip_mismatch=True)
 
     model.compile(
-        loss=ccfc_loss(vocabulary_size=config.vocabulary_size, label_smoothing=label_smoothing),
+        loss=cce_loss(vocabulary_size=config.vocabulary_size, label_smoothing=label_smoothing),
         optimizer=Adam(lr),
         metrics=[
             cat_acc_metric(

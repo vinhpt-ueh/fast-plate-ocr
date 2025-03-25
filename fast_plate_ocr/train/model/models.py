@@ -14,6 +14,8 @@ from keras.layers import (
     Input,
     Reshape,
     Softmax,
+    AveragePooling2D,
+    Conv2D,
 )
 from keras.models import Model
 
@@ -53,13 +55,31 @@ def cnn_ocr_model(
         #freeze backbone
         # backbone.trainable = False
         # x = backbone(input_tensor, training=False)
-        backbone_output = backbone.output
+    #     backbone_output = backbone.output
 
-    x = (
-        head(backbone_output, max_plate_slots, vocabulary_size)
-        if dense
-        else head_no_fc(backbone_output, max_plate_slots, vocabulary_size)
-    )
+    # x = (
+    #     head(backbone_output, max_plate_slots, vocabulary_size)
+    #     if dense
+    #     else head_no_fc(backbone_output, max_plate_slots, vocabulary_size)
+    # )
+
+
+    # Spatial Head: Adjust spatial dimensions and predict per slot
+    # After backbone: x has shape (batch_size, h/16, w/16, 1024)
+    # e.g., for h=32, w=224: (batch_size, 2, 14, 1024)
+    # Pool to (1, max_plate_slots), e.g., (1, 7)
+    x = AveragePooling2D(pool_size=(2, 2), strides=(2, 2))(backbone)
+    # Shape: (batch_size, 1, max_plate_slots, 1024)
+    
+    x = Conv2D(filters=vocabulary_size, kernel_size=1)(x)
+    # Shape: (batch_size, 1, max_plate_slots, vocabulary_size)
+    
+    x = Reshape((max_plate_slots, vocabulary_size))(x)
+    # Shape: (batch_size, max_plate_slots, vocabulary_size)
+    
+    x = Activation('softmax')(x)
+    # Softmax over vocabulary_size dimension for per-slot probabilities
+
     model = Model(inputs=input_tensor, outputs=x)
     model.summary(show_trainable=True)
     return model

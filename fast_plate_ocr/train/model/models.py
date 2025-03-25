@@ -68,7 +68,7 @@ def cnn_ocr_model(
     # After backbone: x has shape (batch_size, h/16, w/16, 1024)
     # e.g., for h=32, w=224: (batch_size, 2, 14, 1024)
     # Pool to (1, max_plate_slots), e.g., (1, 7)
-    x = AveragePooling2D(pool_size=(2, 2), strides=(2, 2))(backbone)
+    x = AveragePooling2D(pool_size=(2, 2), strides=(2, 2))(backbone.output)
     # Shape: (batch_size, 1, max_plate_slots, 1024)
     
     x = Conv2D(filters=vocabulary_size, kernel_size=1)(x)

@@ -50,6 +50,9 @@ def cnn_ocr_model(
             include_top=False,
             weights=None,
         )
+        #freeze backbone
+        backbone.trainable = False
+        backbone = backbone(backbone, training=False)
         backbone_output = backbone.output
 
     x = (

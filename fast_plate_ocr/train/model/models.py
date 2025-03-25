@@ -52,7 +52,7 @@ def cnn_ocr_model(
         )
         #freeze backbone
         backbone.trainable = False
-        backbone_output = backbone(backbone.output, training=False)
+        backbone_output = backbone.output
 
     x = (
         head(backbone_output, max_plate_slots, vocabulary_size)

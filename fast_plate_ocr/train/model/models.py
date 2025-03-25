@@ -52,8 +52,7 @@ def cnn_ocr_model(
         )
         #freeze backbone
         backbone.trainable = False
-        backbone = backbone(backbone, training=False)
-        backbone_output = backbone.output
+        backbone_output = backbone(backbone.output, training=False)
 
     x = (
         head(backbone_output, max_plate_slots, vocabulary_size)
@@ -61,6 +60,7 @@ def cnn_ocr_model(
         else head_no_fc(backbone_output, max_plate_slots, vocabulary_size)
     )
     model = Model(inputs=input_tensor, outputs=x)
+    model.summary(show_trainable=True)
     return model
 
 

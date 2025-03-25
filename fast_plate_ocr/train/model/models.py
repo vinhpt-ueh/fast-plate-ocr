@@ -52,7 +52,8 @@ def cnn_ocr_model(
         )
         #freeze backbone
         backbone.trainable = False
-        backbone_output = backbone.output
+        x = backbone(input_tensor, training=False)
+        backbone_output = x.output
 
     x = (
         head(backbone_output, max_plate_slots, vocabulary_size)
@@ -70,7 +71,7 @@ def head(x, max_plate_slots: int, vocabulary_size: int):
     """
     x = GlobalAveragePooling2D()(x)
     # dropout for more robust learning
-    x = Dense(256, activation='relu')(x)
+    # x = Dense(256, activation='relu')(x)
     x = Dropout(0.5)(x)
     dense_outputs = [
         Activation(softmax)(Dense(units=vocabulary_size)(x)) for _ in range(max_plate_slots)

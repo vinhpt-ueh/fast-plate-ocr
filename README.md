@@ -1,3 +1,4 @@
+python -m fast_plate_ocr.cli.visualize_predictions -m cnn_ocr-epoch_08-acc_0.804.keras --config-file config.yaml --img-dir test_tracks --ground-truth-file test_results.txt
 ## Fast & Lightweight License Plate OCR
 
 [![Actions status](https://github.com/ankandrew/fast-plate-ocr/actions/workflows/main.yaml/badge.svg)](https://github.com/ankandrew/fast-plate-ocr/actions)

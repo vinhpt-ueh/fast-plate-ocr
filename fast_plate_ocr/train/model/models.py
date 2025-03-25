@@ -7,7 +7,6 @@ import kimm.models
 from keras.activations import softmax
 from keras.layers import (
     Activation,
-    Add,
     Concatenate,
     Dense,
     Dropout,
@@ -15,9 +14,6 @@ from keras.layers import (
     Input,
     Reshape,
     Softmax,
-    Conv2D,
-    BatchNormalization,
-    Multiply,
 )
 from keras.models import Model
 
@@ -71,39 +67,16 @@ def cnn_ocr_model(
 
 def head(x, max_plate_slots: int, vocabulary_size: int):
     """
-    Enhanced model head with attention and deeper architecture.
+    Model's head with Fully Connected (FC) layers.
     """
-    # Channel attention mechanism
-    channel_avg = GlobalAveragePooling2D()(x)
-    channel_fc1 = Dense(x.shape[-1] // 4, activation='relu')(channel_avg)
-    channel_fc2 = Dense(x.shape[-1], activation='sigmoid')(channel_fc1)
-    x = Multiply()([x, channel_fc2])
-
-    # Global features
     x = GlobalAveragePooling2D()(x)
-    
-    # Deeper network with residual connections
-    x = Dense(512, activation='relu')(x)
-    x = BatchNormalization()(x)
-    x = Dropout(0.6)(x)  # Increased dropout
-    
-    residual = x
-    x = Dense(512, activation='relu')(x)
-    x = BatchNormalization()(x)
-    x = Dropout(0.6)(x)
-    x = Dense(512, activation='relu')(x)
-    x = BatchNormalization()(x)
-    x = Add()([x, residual])  # Residual connection
-    
-    # Character-specific features
-    dense_outputs = []
-    for _ in range(max_plate_slots):
-        char_branch = Dense(256, activation='relu')(x)
-        char_branch = Dropout(0.5)(char_branch)
-        char_branch = Dense(vocabulary_size)(char_branch)
-        char_branch = Activation(softmax)(char_branch)
-        dense_outputs.append(char_branch)
-    
+    # dropout for more robust learning
+    # x = Dense(256, activation='relu')(x)
+    x = Dropout(0.5)(x)
+    dense_outputs = [
+        Activation(softmax)(Dense(units=vocabulary_size)(x)) for _ in range(max_plate_slots)
+    ]
+    # concat all the dense outputs
     x = Concatenate()(dense_outputs)
     return x
 

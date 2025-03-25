@@ -9,7 +9,7 @@ from datetime import datetime
 import albumentations as A
 import click
 from keras.callbacks import EarlyStopping, ReduceLROnPlateau, TensorBoard
-from keras.optimizers import Adam
+from keras.optimizers import AdamW
 from keras.src.callbacks import ModelCheckpoint
 from torch.utils.data import DataLoader
 
@@ -211,7 +211,7 @@ def train(
 
     model.compile(
         loss=cce_loss(vocabulary_size=config.vocabulary_size, label_smoothing=label_smoothing),
-        optimizer=Adam(lr),
+        optimizer=AdamW(lr,weight_decay=0.004),
         metrics=[
             cat_acc_metric(
                 max_plate_slots=config.max_plate_slots, vocabulary_size=config.vocabulary_size

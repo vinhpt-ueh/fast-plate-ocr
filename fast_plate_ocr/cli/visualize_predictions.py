@@ -110,8 +110,20 @@ def compare_with_ground_truth(
             logging.error(f"Failed to load image {first_image_path}")
             continue
 
+        def adjust_gamma(image, gamma=1.5):
+            invGamma = 1.0 / gamma
+            # Build a lookup table mapping the pixel values [0, 255] to their adjusted gamma values
+            table = np.array([((i / 255.0) ** invGamma) * 255 for i in np.arange(0, 256)]).astype("uint8")
+            return cv2.LUT(image, table)
+        
+        gamma_corrected = adjust_gamma(img, gamma=1.5)
+
+        # cv2.imshow('Gamma Corrected', gamma_corrected)
+        # cv2.waitKey(0)
+        # cv2.destroyAllWindows()
+
         # Preprocess the image
-        img = cv2.resize(img, (config.img_width, config.img_height), interpolation=cv2.INTER_LINEAR)
+        img = cv2.resize(gamma_corrected, (config.img_width, config.img_height), interpolation=cv2.INTER_LINEAR)
         img = np.expand_dims(img, -1)
         # image = cv2.resize(image, (config.img_width, config.img_height))
         x = np.expand_dims(img, 0)

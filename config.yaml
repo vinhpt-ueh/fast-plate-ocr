@@ -9,6 +9,6 @@ alphabet: '0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ_'
 # Padding character for plates which length is smaller than MAX_PLATE_SLOTS. It should still be present in the alphabet.
 pad_char: '_'
 # Image height which is fed to the model.
-img_height: 60
+img_height: 70
 # Image width which is fed to the model.
-img_width: 90
+img_width: 140

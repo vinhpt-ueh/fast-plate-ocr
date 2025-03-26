@@ -47,8 +47,6 @@ def read_plate_image(image_path: str, img_height: int, img_width: int) -> npt.ND
     :return: The resized license plate image as a NumPy array.
     """
     img = cv2.imread(image_path, cv2.IMREAD_GRAYSCALE)
-    print('hihihihihi',img_width)
-    print('hihihihihi',img_width)
     img = cv2.resize(img, (img_width, img_height), interpolation=cv2.INTER_LINEAR)
     img = np.expand_dims(img, -1)
     return img

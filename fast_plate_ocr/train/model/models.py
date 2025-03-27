@@ -71,22 +71,13 @@ def head(x, max_plate_slots: int, vocabulary_size: int):
     """
     Model's head with Fully Connected (FC) layers.
     """
-    # x = Conv2D(256, (3, 3), activation='relu')(x)
     x = GlobalAveragePooling2D()(x)
     # dropout for more robust learning
-    # x = Dense(256, activation='relu')(x)
-    x = Dropout(0.6)(x)
-    # x = Reshape((max_plate_slots, vocabulary_size, 1))(x)
-    # x = Conv2D(256, kernel_size=1, padding="same", activation="relu")(x)
-    
-    # conv_layers = [
-    #     Activation(x)(Conv2D(128, kernel_size=1, padding="same")(x)) for _ in range(max_plate_slots)
-    # ]
+    x = Dropout(0.7)(x)
     dense_outputs = [
-        Activation(softmax)(Dense(units=vocabulary_size)(Dense(units=vocabulary_size)(x))) for _ in range(max_plate_slots)
+        Activation(softmax)(Dense(units=vocabulary_size)(x)) for _ in range(max_plate_slots)
     ]
     # concat all the dense outputs
-    # x = Concatenate()(conv_layers)
     x = Concatenate()(dense_outputs)
     return x
 

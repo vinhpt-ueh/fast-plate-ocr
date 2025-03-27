@@ -71,7 +71,7 @@ def head(x, max_plate_slots: int, vocabulary_size: int):
     """
     Model's head with Fully Connected (FC) layers.
     """
-    x = Conv2D(64, (3, 3), activation='relu')(x)
+    x = Conv2D(256, (3, 3), activation='relu')(x)
     x = GlobalAveragePooling2D()(x)
     # dropout for more robust learning
     # x = Dense(256, activation='relu')(x)

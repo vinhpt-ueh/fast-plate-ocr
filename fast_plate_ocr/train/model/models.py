@@ -86,7 +86,7 @@ def head(x, max_plate_slots: int, vocabulary_size: int):
         Activation(softmax)(Dense(units=vocabulary_size)(x)) for _ in range(max_plate_slots)
     ]
     # concat all the dense outputs
-    x = Concatenate()(conv_layers)
+    # x = Concatenate()(conv_layers)
     x = Concatenate()(dense_outputs)
     return x
 

@@ -14,6 +14,7 @@ from keras.layers import (
     Input,
     Reshape,
     Softmax,
+    Conv2D,
 )
 from keras.models import Model
 
@@ -72,6 +73,7 @@ def head(x, max_plate_slots: int, vocabulary_size: int):
     x = GlobalAveragePooling2D()(x)
     # dropout for more robust learning
     # x = Dense(256, activation='relu')(x)
+    x = Conv2D(256, kernel_size=1, padding="same", activation="relu")(x)
     x = Dropout(0.6)(x)
     dense_outputs = [
         Activation(softmax)(Dense(units=vocabulary_size)(x)) for _ in range(max_plate_slots)

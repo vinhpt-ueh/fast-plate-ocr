@@ -73,7 +73,7 @@ def head(x, max_plate_slots: int, vocabulary_size: int):
     """
     x = GlobalAveragePooling2D()(x)
     # dropout for more robust learning
-    x = Dropout(0.7)(x)
+    x = Dropout(0.5)(x)
     dense_outputs = [
         Activation(softmax)(Dense(units=vocabulary_size)(x)) for _ in range(max_plate_slots)
     ]

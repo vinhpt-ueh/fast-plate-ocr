@@ -164,3 +164,4 @@ dataset
 old_models
 test_tracks
 synthetic_images
+cropped_license_plates_zero_padding

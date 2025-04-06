@@ -211,7 +211,7 @@ def train(
 
     model.compile(
         loss=cce_loss(vocabulary_size=config.vocabulary_size, label_smoothing=label_smoothing),
-        optimizer=AdamW(lr,weight_decay=0.004),
+        optimizer=AdamW(lr,weight_decay=0.004,momentum=0.9),
         metrics=[
             cat_acc_metric(
                 max_plate_slots=config.max_plate_slots, vocabulary_size=config.vocabulary_size

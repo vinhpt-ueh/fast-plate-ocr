@@ -99,7 +99,7 @@ def compare_with_ground_truth(
     # Process each sub-folder
     for i, subfolder in enumerate(subfolders):
         # Get the first PNG image in the sub-folder
-        image_files = list(subfolder.glob('*.png'))
+        image_files = list(subfolder.glob('*.jpg'))
         if not image_files:
             logging.warning(f"No PNG images found in {subfolder}")
             continue
@@ -116,7 +116,7 @@ def compare_with_ground_truth(
             table = np.array([((i / 255.0) ** invGamma) * 255 for i in np.arange(0, 256)]).astype("uint8")
             return cv2.LUT(image, table)
         
-        gamma_corrected = adjust_gamma(img, gamma=1.5)
+        gamma_corrected = adjust_gamma(img, gamma=1)
 
         # cv2.imshow('Gamma Corrected', gamma_corrected)
         # cv2.waitKey(0)

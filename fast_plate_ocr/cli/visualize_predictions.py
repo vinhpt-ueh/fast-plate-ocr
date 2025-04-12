@@ -13,6 +13,8 @@ import numpy as np
 from fast_plate_ocr.train.model.config import load_config_from_yaml
 from fast_plate_ocr.train.utilities import utils
 from fast_plate_ocr.train.utilities.utils import postprocess_model_output
+import time
+from fast_plate_ocr import ONNXPlateRecognizer
 
 logging.basicConfig(
     level=logging.INFO, format="%(asctime)s - %(message)s", datefmt="%Y-%m-%d %H:%M:%S"
@@ -89,6 +91,7 @@ def compare_with_ground_truth(
 
     # Track correct predictions
     correct = 0
+    predict_time_list = []
 
     # Process each sub-folder
     for i, subfolder in enumerate(subfolders):
@@ -123,6 +126,7 @@ def compare_with_ground_truth(
         x = np.expand_dims(img, 0)
 
         # Make prediction
+        start_time=time.time()
         prediction = model(x, training=False)
         prediction = keras.ops.stop_gradient(prediction).numpy()
         plate, probs = postprocess_model_output(
@@ -131,6 +135,10 @@ def compare_with_ground_truth(
             max_plate_slots=config.max_plate_slots,
             vocab_size=config.vocabulary_size,
         )
+        end_time=time.time()
+        duration= 1000*(end_time-start_time)
+        predict_time_list.append(duration)
+        
 
         # Compare with ground truth
         gt = ground_truths[i]
@@ -146,6 +154,7 @@ def compare_with_ground_truth(
     # Log accuracy
     accuracy = correct / len(subfolders) if subfolders else 0
     logging.info(f"Accuracy: {accuracy:.2%}")
+    logging.info(f"average prediction time: {sum(predict_time_list)/len(predict_time_list)}",)
 
 
 if __name__ == "__main__":

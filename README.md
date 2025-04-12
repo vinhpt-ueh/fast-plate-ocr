@@ -42,6 +42,7 @@ Some results for stage 1:
 More details in: results/stage_1_LP_detection/
 
 Some results for stage 2:
+
 ![alt text](results/stage_2_LP_recognition/image.png)
 ![alt text](results/stage_2_LP_recognition/image-1.png)
 ![alt text](results/stage_2_LP_recognition/image-2.png)

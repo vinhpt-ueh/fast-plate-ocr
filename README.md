@@ -22,7 +22,7 @@ download test_tracks: https://drive.google.com/file/d/1Y1emehE8KL3nzFuwWvTWv5JYc
 
 To re-produce the results for stage 2
 ```
-python -m stage2_evaluation -m models/cnn_ocr-epoch_07-acc_0.858_98.keras --config-file config.yaml --img-dir cropped_license_plates_zero_padding --ground-truth-file test_results.txt --show-visualize False
+python -m stage2_evaluation -m weights/stage_2_LP_recognition/cnn_ocr-epoch_07-acc_0.858_98.keras --config-file config.yaml --img-dir cropped_license_plates_zero_padding --ground-truth-file test_results.txt --show-visualize False
 ```
 
 ![alt text](results/stage_2_LP_recognition/result.png)

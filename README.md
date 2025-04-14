@@ -33,6 +33,19 @@ You will need below files to train the model, these files are provided in the re
 - base_model.keras in weights/stage_2_LP_recognition folder
 - config.yaml
 
+## RESULTS
+
+Some results for stage 1:
+![alt text](results/stage_1_LP_detection/confusion_matrix.png)
+
+![alt text](results/stage_1_LP_detection/results.png)
+More details in: results/stage_1_LP_detection/
+
+![alt text](results/stage_2_LP_recognition/image.png)
+![alt text](results/stage_2_LP_recognition/image-1.png)
+![alt text](results/stage_2_LP_recognition/image-2.png)
+![alt text](results/stage_2_LP_recognition/image-3.png)
+
 ## Acknowledgement
 This project is based on [fast-plate-ocr](https://github.com/ankandrew/fast-plate-ocr), Thanks for their excellent work!
 
